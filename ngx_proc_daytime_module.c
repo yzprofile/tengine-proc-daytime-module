@@ -86,7 +86,8 @@ ngx_proc_daytime_create_conf(ngx_conf_t *cf)
     pbcf = ngx_pcalloc(cf->pool, sizeof(ngx_proc_daytime_conf_t));
 
     if (pbcf == NULL) {
-        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "daytime create proc conf error");
+        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                           "daytime create proc conf error");
         return NULL;
     }
 
@@ -204,7 +205,8 @@ ngx_proc_daytime_process_init(ngx_cycle_t *cycle)
 static ngx_int_t
 ngx_proc_daytime_loop(ngx_cycle_t *cycle)
 {
-    ngx_log_error(NGX_LOG_EMERG, cycle->log, 0, "daytime %V", &ngx_cached_http_time);
+    ngx_log_error(NGX_LOG_EMERG, cycle->log, 0, "daytime %V",
+                  &ngx_cached_http_time);
 
     return NGX_OK;
 }
@@ -243,18 +245,17 @@ ngx_proc_daytime_accept(ngx_event_t *ev)
 
 /*
   Daytime Protocol
-  
+
   http://tools.ietf.org/html/rfc867
 
   Weekday, Month Day, Year Time-Zone
 */
-    p = ngx_sprintf(buf, "%s, ", week[ngx_cached_tm->tm_wday]);
-    p = ngx_sprintf(p, "%s, ", months[ngx_cached_tm->tm_mon]);
-    p = ngx_sprintf(p, "%d, ", ngx_cached_tm->tm_mday);
-    p = ngx_sprintf(p, "%d, ", ngx_cached_tm->tm_year);
-    p = ngx_sprintf(p, "%d:%d:%d-", ngx_cached_tm->tm_hour,
-                    ngx_cached_tm->tm_min, ngx_cached_tm->tm_sec);
-    p = ngx_sprintf(p, "%s", ngx_cached_tm->tm_zone);
+    p = ngx_sprintf(buf, "%s, %s, %d, %d, %d:%d:%d-%s",
+                    week[ngx_cached_tm->tm_wday],
+                    months[ngx_cached_tm->tm_mon],
+                    ngx_cached_tm->tm_mday, ngx_cached_tm->tm_year,
+                    ngx_cached_tm->tm_hour, ngx_cached_tm->tm_min,
+                    ngx_cached_tm->tm_sec, ngx_cached_tm->tm_zone);
 
     ngx_write_fd(s, buf, p - buf);
 
