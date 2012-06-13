@@ -14,11 +14,11 @@ static void ngx_proc_daytime_accept(ngx_event_t *ev);
 
 
 static char  *week[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-			 "Friday", "Saturday" };
+                         "Friday", "Saturday" };
 
 static char  *months[] = { "January", "February", "March", "April", "May",
-			   "June", "July", "August", "Semptember", "October",
-			   "November", "December" };
+                           "June", "July", "August", "Semptember", "October",
+                           "November", "December" };
 
 
 typedef struct {
@@ -121,7 +121,7 @@ ngx_proc_daytime_prepare(ngx_cycle_t *cycle)
     }
 
     if (pbcf->port == 0) {
-	return NGX_DECLINED;
+        return NGX_DECLINED;
     }
 
     return NGX_OK;
@@ -247,14 +247,13 @@ ngx_proc_daytime_accept(ngx_event_t *ev)
   http://tools.ietf.org/html/rfc867
 
   Weekday, Month Day, Year Time-Zone
-
 */
     p = ngx_sprintf(buf, "%s, ", week[ngx_cached_tm->tm_wday]);
     p = ngx_sprintf(p, "%s, ", months[ngx_cached_tm->tm_mon]);
     p = ngx_sprintf(p, "%d, ", ngx_cached_tm->tm_mday);
     p = ngx_sprintf(p, "%d, ", ngx_cached_tm->tm_year);
     p = ngx_sprintf(p, "%d:%d:%d-", ngx_cached_tm->tm_hour,
-		    ngx_cached_tm->tm_min, ngx_cached_tm->tm_sec);
+                    ngx_cached_tm->tm_min, ngx_cached_tm->tm_sec);
     p = ngx_sprintf(p, "%s", ngx_cached_tm->tm_zone);
 
     ngx_write_fd(s, buf, p - buf);
