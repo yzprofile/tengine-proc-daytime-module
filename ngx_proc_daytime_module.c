@@ -114,7 +114,7 @@ ngx_proc_daytime_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 static ngx_int_t
 ngx_proc_daytime_prepare(ngx_cycle_t *cycle)
 {
-    ngx_proc_daytime_conf_t *pbcf;
+    ngx_proc_daytime_conf_t  *pbcf;
 
     pbcf = ngx_proc_get_conf(cycle->conf_ctx, ngx_proc_daytime_module);
     if (!pbcf->enable) {
@@ -132,12 +132,12 @@ ngx_proc_daytime_prepare(ngx_cycle_t *cycle)
 static ngx_int_t
 ngx_proc_daytime_process_init(ngx_cycle_t *cycle)
 {
-    int                   reuseaddr;
-    ngx_event_t          *rev;
-    ngx_socket_t          fd;
-    ngx_connection_t     *c;
-    struct sockaddr_in    sin;
-    ngx_proc_daytime_conf_t *pbcf;
+    int                       reuseaddr;
+    ngx_event_t              *rev;
+    ngx_socket_t              fd;
+    ngx_connection_t         *c;
+    struct sockaddr_in        sin;
+    ngx_proc_daytime_conf_t  *pbcf;
 
     pbcf = ngx_proc_get_conf(cycle->conf_ctx, ngx_proc_daytime_module);
     fd = ngx_socket(AF_INET, SOCK_STREAM, 0);
@@ -220,18 +220,16 @@ ngx_proc_daytime_exit_process(ngx_cycle_t *cycle)
     pbcf = ngx_proc_get_conf(cycle->conf_ctx, ngx_proc_daytime_module);
 
     ngx_close_socket(pbcf->fd);
-
-    return;
 }
 
 
 static void
 ngx_proc_daytime_accept(ngx_event_t *ev)
 {
-    u_char                sa[NGX_SOCKADDRLEN], buf[256], *p;
-    socklen_t             socklen;
-    ngx_socket_t          s;
-    ngx_connection_t     *lc;
+    u_char             sa[NGX_SOCKADDRLEN], buf[256], *p;
+    socklen_t          socklen;
+    ngx_socket_t       s;
+    ngx_connection_t  *lc;
 
     lc = ev->data;
     s = accept(lc->fd, (struct sockaddr *) sa, &socklen);
@@ -243,13 +241,13 @@ ngx_proc_daytime_accept(ngx_event_t *ev)
         goto finish;
     }
 
-/*
-  Daytime Protocol
+    /*
+      Daytime Protocol
 
-  http://tools.ietf.org/html/rfc867
+      http://tools.ietf.org/html/rfc867
 
-  Weekday, Month Day, Year Time-Zone
-*/
+      Weekday, Month Day, Year Time-Zone
+    */
     p = ngx_sprintf(buf, "%s, %s, %d, %d, %d:%d:%d-%s",
                     week[ngx_cached_tm->tm_wday],
                     months[ngx_cached_tm->tm_mon],
